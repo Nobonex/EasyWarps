@@ -18,6 +18,7 @@ import org.spongepowered.api.world.World;
 
 public class Warp implements CommandExecutor {
     private EasyWarps plugin = EasyWarps.getPlugin();
+    private CommentedConfigurationNode config = this.plugin.getConfig();
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
@@ -28,15 +29,14 @@ public class Warp implements CommandExecutor {
         Player player = (Player) src;
         if (args.getOne("name").isPresent()) {
             String name = args.<String>getOne("name").get();
-            CommentedConfigurationNode config = plugin.getConfig();
-            if (!config.getNode(name.toUpperCase()).isVirtual()) {
+            if (!this.config.getNode(name.toUpperCase()).isVirtual()) {
                 Location<World> warpPoint = new Location<World>(
                         Sponge.getServer().getWorld(
-                                config.getNode(name.toUpperCase(), "world").getString()
+                                this.config.getNode(name.toUpperCase(), "world").getString()
                         ).get(),
-                        config.getNode(name.toUpperCase(), "x").getDouble(),
-                        config.getNode(name.toUpperCase(), "y").getDouble(),
-                        config.getNode(name.toUpperCase(), "z").getDouble()
+                        this.config.getNode(name.toUpperCase(), "x").getDouble(),
+                        this.config.getNode(name.toUpperCase(), "y").getDouble(),
+                        this.config.getNode(name.toUpperCase(), "z").getDouble()
                 );
                 player.setLocationSafely(warpPoint);
                 player.sendMessage(Text.of("[Easy Warps]: ", TextColors.GREEN, "Warped to ", TextColors.AQUA, name));

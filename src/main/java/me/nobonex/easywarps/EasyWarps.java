@@ -1,8 +1,11 @@
 package me.nobonex.easywarps;
+
 import com.google.inject.Inject;
 import me.nobonex.easywarps.commands.CreateWarp;
 import me.nobonex.easywarps.commands.DeleteWarp;
+import me.nobonex.easywarps.commands.ViewWarps;
 import me.nobonex.easywarps.commands.Warp;
+import me.nobonex.easywarps.listeners.Signs;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
@@ -11,7 +14,6 @@ import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
@@ -24,7 +26,7 @@ import java.io.IOException;
         id = "easywarps",
         name = "Easy Warps",
         authors = "Nobonex",
-        version = "1.0"
+        version = "1.1"
 )
 public class EasyWarps {
     private static EasyWarps plugin;
@@ -51,17 +53,15 @@ public class EasyWarps {
         plugin=this;
         try {
             if(!this.configurationFile.exists()){
-                this.configurationFile.createNewFile();
+               this.configurationFile.createNewFile();
             }
             this.node = loader.load();
             this.loader.save(node);
         }catch (IOException e){
             this.logger.warn("Creating configuration file failed");
         }
-    }
-
-    @Listener
-    public void onInit(GameInitializationEvent event){
+        this.game.getEventManager().registerListeners(this, new Signs());
+        //registerListeners();
         initialiseCommandSpecs();
     }
 
@@ -104,6 +104,13 @@ public class EasyWarps {
                         GenericArguments.string(Text.of("name"))
                 )
                 .build();
+
+        CommandSpec listWarps = CommandSpec.builder()
+                .executor(new ViewWarps())
+                .description(Text.of("Show a list of available warps"))
+                .permission("ew.warplist")
+                .build();
+
         /*-------------------------------------------------------------------*/
         /*No commands below this point unless they have a separate function! */
         /*-------------------------------------------------------------------*/
@@ -116,7 +123,13 @@ public class EasyWarps {
                 )
                 .child(deleteWarp,"delete")
                 .child(createWarp,"create")
+                .child(listWarps,"list")
                 .build();
-        game.getCommandManager().register(this,warp,"warp");
+        this.game.getCommandManager().register(this,warp,"warp");
     }
+/*
+    private void registerListeners(){
+        this.game.getEventManager().registerListeners(this, new Signs());
+    }
+    */
 }

@@ -16,6 +16,7 @@ import java.io.IOException;
 
 public class CreateWarp implements CommandExecutor {
     private EasyWarps plugin = EasyWarps.getPlugin();
+    private CommentedConfigurationNode config = this.plugin.getConfig();
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if(!(src instanceof Player)){
@@ -25,16 +26,15 @@ public class CreateWarp implements CommandExecutor {
         Player player = (Player)src;
         if(args.getOne("name").isPresent()){
             String name = args.<String>getOne("name").get();
-            CommentedConfigurationNode config = plugin.getConfig();
-            if(config.getNode(name.toUpperCase()).isVirtual()){
-                config.getNode(name.toUpperCase(), "world").setValue(player.getWorld().getName());
-                config.getNode(name.toUpperCase(), "x").setValue(player.getLocation().getX());
-                config.getNode(name.toUpperCase(), "y").setValue(player.getLocation().getY());
-                config.getNode(name.toUpperCase(), "z").setValue(player.getLocation().getZ());
+            if(this.config.getNode(name.toUpperCase()).isVirtual()){
+                this.config.getNode(name.toUpperCase(), "world").setValue(player.getWorld().getName());
+                this.config.getNode(name.toUpperCase(), "x").setValue(player.getLocation().getX());
+                this.config.getNode(name.toUpperCase(), "y").setValue(player.getLocation().getY());
+                this.config.getNode(name.toUpperCase(), "z").setValue(player.getLocation().getZ());
                 try{
-                    plugin.loader.save(config);
+                    this.plugin.loader.save(this.config);
                 }catch (IOException e){
-                    plugin.getLogger().warn("Error creating warp");
+                    this.plugin.getLogger().warn("Error creating warp");
                     e.printStackTrace();
                 }
                 player.sendMessage(Text.of("[Easy Warps]: ",TextColors.GREEN,"Warp ",TextColors.AQUA, name,TextColors.GREEN," created"));

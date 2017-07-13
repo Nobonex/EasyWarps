@@ -7,7 +7,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -18,15 +17,16 @@ import java.io.IOException;
  */
 public class DeleteWarp implements CommandExecutor {
     private EasyWarps plugin = EasyWarps.getPlugin();
+    private CommentedConfigurationNode config = this.plugin.getConfig();
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if(args.getOne("name").isPresent()){
             String name = args.<String>getOne("name").get();
-            CommentedConfigurationNode config = plugin.getConfig();
-            if(!config.getNode(name.toUpperCase()).isVirtual()){
-                config.removeChild(name.toUpperCase());
+
+            if(!this.config.getNode(name.toUpperCase()).isVirtual()){
+                this.config.removeChild(name.toUpperCase());
                 try{
-                    this.plugin.loader.save(config);
+                    this.plugin.loader.save(this.config);
                 }catch (IOException e){
                     this.plugin.getLogger().warn("Error deleting warp" + name);
                     e.printStackTrace();
