@@ -60,8 +60,7 @@ public class EasyWarps {
         }catch (IOException e){
             this.logger.warn("Creating configuration file failed");
         }
-        this.game.getEventManager().registerListeners(this, new Signs());
-        //registerListeners();
+        registerListeners();
         initialiseCommandSpecs();
     }
 
@@ -127,9 +126,8 @@ public class EasyWarps {
                 .build();
         this.game.getCommandManager().register(this,warp,"warp");
     }
-/*
+
     private void registerListeners(){
         this.game.getEventManager().registerListeners(this, new Signs());
     }
-    */
 }
