@@ -31,12 +31,11 @@ public class Signs  {
                 String warpName = signData.getValue(Keys.SIGN_LINES).get().get(1).toPlain();
                 //If the sign starts with "[warp]" and has a valid warp name, set it up correctly.
                 if(!this.config.getNode(warpName.toUpperCase()).isVirtual()){
-                    signData.set(
-                            signData.getValue(Keys.SIGN_LINES).get().set(0,Text.of(TextColors.YELLOW,"[Warp]"))
-                    );
+                    signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0,Text.of(TextColors.YELLOW,"[Warp]")).set(1,Text.of(TextColors.AQUA,warpName)));
                     player.sendMessage(Text.of("[Easy Warps]: ",TextColors.GREEN,"Created a sign warp to ",TextColors.AQUA,warpName));
                     return;
                 }
+                signData.set(signData.getValue(Keys.SIGN_LINES).get().set(0,Text.of(TextColors.DARK_RED,"[Warp]")));
                 player.sendMessage(Text.of("[Easy Warps]: ",TextColors.RED,"No warp with the name ",TextColors.AQUA,warpName,TextColors.RED," exists!"));
             }
         }

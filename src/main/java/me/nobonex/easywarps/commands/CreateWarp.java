@@ -12,11 +12,13 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class CreateWarp implements CommandExecutor {
     private EasyWarps plugin = EasyWarps.getPlugin();
     private CommentedConfigurationNode config = this.plugin.getConfig();
+    private List<Text> warpList = ViewWarps.getWarpList();
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if(!(src instanceof Player)){
@@ -37,6 +39,7 @@ public class CreateWarp implements CommandExecutor {
                     this.plugin.getLogger().warn("Error creating warp");
                     e.printStackTrace();
                 }
+                warpList.add(Text.of(name.toUpperCase()));
                 player.sendMessage(Text.of("[Easy Warps]: ",TextColors.GREEN,"Warp ",TextColors.AQUA, name,TextColors.GREEN," created"));
                 return CommandResult.success();
             }

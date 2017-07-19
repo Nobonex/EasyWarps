@@ -26,7 +26,7 @@ import java.io.IOException;
         id = "easywarps",
         name = "Easy Warps",
         authors = "Nobonex",
-        version = "1.1"
+        version = "1.2"
 )
 public class EasyWarps {
     private static EasyWarps plugin;
@@ -62,6 +62,12 @@ public class EasyWarps {
         }
         registerListeners();
         initialiseCommandSpecs();
+        /*----------------------------------------------------------------------------*/
+        /*Experiments below. If accidentally left in pushed code, please let me know. */
+        /*----------------------------------------------------------------------------*/
+
+        //Nothing
+
     }
 
     @Listener
@@ -73,32 +79,11 @@ public class EasyWarps {
         }
     }
 
-    public static EasyWarps getPlugin(){
-        return plugin;
-    }
-
-    public CommentedConfigurationNode getConfig(){
-        return this.node;
-    }
-
-    public Logger getLogger(){
-        return this.logger;
-    }
-
     private void initialiseCommandSpecs(){
         CommandSpec deleteWarp = CommandSpec.builder()
                 .executor(new DeleteWarp())
                 .description(Text.of("Delete a warp with the given name"))
-                .permission("ew.warpdel")
-                .arguments(
-                        GenericArguments.string(Text.of("name"))
-                )
-                .build();
-
-        CommandSpec createWarp = CommandSpec.builder()
-                .executor(new CreateWarp())
-                .description(Text.of("Create a warp at your location with the given name"))
-                .permission("ew.warpcreate")
+                .permission("ew.delete")
                 .arguments(
                         GenericArguments.string(Text.of("name"))
                 )
@@ -107,7 +92,17 @@ public class EasyWarps {
         CommandSpec listWarps = CommandSpec.builder()
                 .executor(new ViewWarps())
                 .description(Text.of("Show a list of available warps"))
-                .permission("ew.warplist")
+                .permission("ew.list")
+                .build();
+        this.game.getCommandManager().register(this,listWarps,"warps");
+
+        CommandSpec createWarp = CommandSpec.builder()
+                .executor(new CreateWarp())
+                .description(Text.of("Create a warp at your location with the given name"))
+                .permission("ew.create")
+                .arguments(
+                        GenericArguments.string(Text.of("name"))
+                )
                 .build();
 
         /*-------------------------------------------------------------------*/
@@ -126,8 +121,19 @@ public class EasyWarps {
                 .build();
         this.game.getCommandManager().register(this,warp,"warp");
     }
-
     private void registerListeners(){
         this.game.getEventManager().registerListeners(this, new Signs());
+    }
+
+    public static EasyWarps getPlugin(){
+        return plugin;
+    }
+
+    public CommentedConfigurationNode getConfig(){
+        return this.node;
+    }
+
+    public Logger getLogger(){
+        return this.logger;
     }
 }
