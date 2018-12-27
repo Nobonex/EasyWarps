@@ -21,6 +21,7 @@ import java.util.Optional;
 public class Signs  {
     private EasyWarps plugin=EasyWarps.getPlugin();
     private CommentedConfigurationNode config = this.plugin.getConfig();
+    
     @Listener
     public void onSignPlaceEvent(ChangeSignEvent event){
         Player player;
